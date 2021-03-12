@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+  <title>Quarkus - Amazon S3 Client - 1.11</title>
+  <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
+  <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
+  <META HTTP-EQUIV='Content-Security-Policy' CONTENT="default-src 'none'; script-src 'self' 'unsafe-eval' 'sha256-ANpuoVzuSex6VhqpYgsG25OHWVA1I+F6aGU04LoI+5s=' 'sha256-ipy9P/3rZZW06mTLAR0EnXvxSNcnfSDPLDuh3kzbB1w=' js.bizographics.com https://www.redhat.com assets.adobedtm.com jsonip.com https://ajax.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com https://use.fontawesome.com; style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; img-src 'self' *; media-src 'self' ; frame-src https://www.googletagmanager.com https://www.youtube.com https://embed.restream.io; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;">
+  <META HTTP-EQUIV='X-Frame-Options' CONTENT="DENY">
+  <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
+  <META HTTP-EQUIV='X-Content-Type-Options' CONTENT="nosniff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quarkus: Supersonic Subatomic Java">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@QuarkusIO"> 
+  <meta name="twitter:creator" content="@QuarkusIO">
+  <meta property="og:url" content="https://quarkus.io/version/1.11/guides/amazon-s3" />
+  <meta property="og:title" content="Quarkus - Amazon S3 Client - 1.11" />
+  <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
+  <meta property="og:image" content="/assets/images/quarkus_card.png" />
+  
+  <link rel="canonical" href="https://quarkus.io/guides/amazon-s3">
+  <link rel="shortcut icon" type="image/png" href="/favicon.ico" >
+  <link rel="stylesheet" href="/guides/stylesheet/config.css" />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml"  href="/feed.xml" title="Quarkus">
+  <script src="/assets/javascript/goan.js" type="text/javascript"></script>
+  <script src="/assets/javascript/hl.js" type="text/javascript"></script>
+</head>
+
+<body class="guides">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NJWS5L"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="nav-wrapper">
+  <div class="grid-wrapper">
+    <div class="width-12-12">
+      <input type="checkbox" id="checkbox" />
+      <nav id="main-nav" class="main-nav">
+  <div class="container">
+    <div class="logo-wrapper">
+      
+        <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_600px_reverse.png" class="project-logo" title="Quarkus"></a>
+      
+    </div>
+    <label class="nav-toggle" for="checkbox">
+      <i class="fa fa-bars"></i>
+    </label>
+    <div id="menu" class="menu">
+      <span>
+        <a href="/get-started/" class="">はじめに</a>
+      </span>
+      <span>
+        <a href="/guides/" class="active">ガイド</a>
+      </span>
+      <span>
+        <a href="/community/" class="">コミュニティ</a>
+      </span>
+      <span>
+        <a href="/support/" class="">サポート</a>
+      </span>
+      <span>
+        <a href="/blog/" class="">ブログ</a>
+      </span>
+      <span>
+        <a href="https://code.quarkus.io" class="button-cta secondary white">コーディングを開始</a>
+      </span>
+    </div>
+  </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  <div class="content">
+    
+
+
+<div class="grid-wrapper guide">
+  <div class="grid__item width-10-12">
+    <h1 class="text-caps">Quarkus - Amazon S3 Client </h1>
+  </div>
+  <div class="grid__item width-2-12 align-self-center text-right">
+    <select id="guides-version-dropdown">
+      
+        
+        
+        
+        
+          <option value="latest" >1.12 - Latest</option>
+        
+      
+        
+        
+        
+        
+          <option value="1.11" selected>1.11</option>
+        
+      
+        
+        
+        
+        
+          <option value="1.7" >1.7</option>
+        
+      
+    </select>
+  </div>
+  <div class="width-12-12">
+    <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#前提条件">前提条件</a>
+<ul class="sectlevel2">
+<li><a href="#ローカルでの-s3-の準備">ローカルでの S3 の準備</a></li>
+<li><a href="#create-a-s3-bucket">Create a S3 bucket</a></li>
+</ul>
+</li>
+<li><a href="#ソリューション">ソリューション</a></li>
+<li><a href="#creating-the-maven-project">Creating the Maven project</a></li>
+<li><a href="#モデルのセットアップ">モデルのセットアップ</a></li>
+<li><a href="#create-jax-rs-resource">Create JAX-RS resource</a></li>
+<li><a href="#configuring-s3-clients">Configuring S3 clients</a></li>
+<li><a href="#フロントエンドの作成">フロントエンドの作成</a></li>
+<li><a href="#次のステップ">次のステップ</a>
+<ul class="sectlevel2">
+<li><a href="#パッケージング">パッケージング</a></li>
+<li><a href="#非同期にする">非同期にする</a></li>
+</ul>
+</li>
+<li><a href="#設定リファレンス">設定リファレンス</a></li>
+</ul></div>
+    <div>
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Amazon
+S3はオブジェクトストレージサービスです。インターネットアプリケーションのストレージ、バックアップとリカバリ、災害復旧、データアーカイブ、分析用のデータレイク、あらゆるハイブリッドクラウドストレージなどの用途に使用できるように、あらゆるタイプのオブジェクトを保存するために採用することができます。このエクステンションは、Quarkusで実行しているときにクライアントがサービスと通信できるようにする機能を提供します。S3についての詳細は、
+<a href="https://aws.amazon.com/s3/">Amazon S3のウェブサイト</a> で確認できます。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+S3 エクステンションは
+<a href="https://docs.aws.amazon.com/sdk-for-java/v2/developer-guide/welcome.html">AWS
+Java SDK 2.x</a> をベースにしており、2つのプログラミングモデル(Blocking &amp;
+Async)を提供する1.xのコードベースを大幅に書き換えています。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Quarkus extension supports two programming models:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Blocking access using URL Connection HTTP client (by default) or the Apache
+HTTP Client</p>
+</li>
+<li>
+<p>JDK の <code>CompletableFuture</code> オブジェクトと Netty HTTP クライアントをベースにした
+<a href="https://docs.aws.amazon.com/sdk-for-java/v2/developer-guide/basics-async.html">非同期プログラミング</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>このガイドでは、ローカルでAWS上でS3を使用するためのRESTサービスを取得する方法を見ていきます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="前提条件"><a class="anchor" href="#前提条件"></a>前提条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>このガイドを完成させるには、以下が必要です:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JDK 1.8+ がインストールされ、 <code>JAVA_HOME</code>  が適切に設定されていること</p>
+</li>
+<li>
+<p>IDE</p>
+</li>
+<li>
+<p>Apache Maven 3.5.3+</p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">AWS
+Command line interface</a></p>
+</li>
+<li>
+<p>S3サービスにアクセスするためのAWSアカウント。Amazon S3でAWS
+SDKを利用する前に、AWSのアクセスキーIDとシークレットアクセスキーを取得する必要があります。</p>
+</li>
+<li>
+<p>オプションで、テスト目的でローカルでS3を実行するためのシステムのためのDocker</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="ローカルでの-s3-の準備"><a class="anchor" href="#ローカルでの-s3-の準備"></a>ローカルでの S3 の準備</h3>
+<div class="paragraph">
+<p>S3を使い始める最も簡単な方法は、ローカルインスタンスをコンテナーとして実行することです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">docker run -it --publish 8008:4566 -e SERVICES=s3 -e START_WEB=0 localstack/localstack:0.11.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これは、ポート <code>8008</code> でアクセス可能な S3 インスタンスを起動します。</p>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong> : v0.11.5 より新しいバージョンの localstack では、ポート <code>4572</code> の代わりに <code>4566</code> を必要とします。この変更の詳細は <a href="https://github.com/localstack/localstack/issues/2983">GitHub issue</a> を参照してください。</p>
+</div>
+<div class="paragraph">
+<p>AWS CLIを使ってローカルインスタンスのAWSプロファイルを作成します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">$ aws configure --profile localstack
+AWS Access Key ID [None]: test-key
+AWS Secret Access Key [None]: test-secret
+Default region name [None]: us-east-1
+Default output format [None]:</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="create-a-s3-bucket"><a class="anchor" href="#create-a-s3-bucket"></a>Create a S3 bucket</h3>
+<div class="paragraph">
+<p>Create a S3 bucket using AWS CLI</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">aws s3 mb s3://quarkus.s3.quickstart --profile localstack --endpoint-url=http://localhost:8008</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ソリューション"><a class="anchor" href="#ソリューション"></a>ソリューション</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ここで構築したアプリケーションでは、Amazon S3に保存されているファイルを管理することができます。</p>
+</div>
+<div class="paragraph">
+<p>次の章で紹介する手順に沿って、ステップを踏んでアプリを作成することをお勧めします。ただし、完成した例にそのまま進んでも構いません。</p>
+</div>
+<div class="paragraph">
+<p>Gitレポジトリをクローンするか <code>git clone <a href="https://github.com/quarkusio/quarkus-quickstarts.git" class="bare">https://github.com/quarkusio/quarkus-quickstarts.git</a></code> 、
+<a href="https://github.com/quarkusio/quarkus-quickstarts/archive/master.zip">アーカイブ</a> をダウンロードします。</p>
+</div>
+<div class="paragraph">
+<p>ソリューションは <code>amazon-s3-quickstart</code>
+<a href="https://github.com/quarkusio/quarkus-quickstarts/tree/master/amazon-s3-quickstart">ディレクトリ</a> にあります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-maven-project"><a class="anchor" href="#creating-the-maven-project"></a>Creating the Maven project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まず、新しいプロジェクトが必要です。以下のコマンドで新規プロジェクトを作成します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.11.5.Final:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=amazon-s3-quickstart \
+    -DclassName="org.acme.s3.S3SyncClientResource" \
+    -Dpath="/s3" \
+    -Dextensions="resteasy,resteasy-jackson,amazon-s3"
+cd amazon-s3-quickstart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このコマンドは、RESTEasy/JAX-RSとS3クライアントエクステンションをインポートするMaven構造を生成します。この後、
+<code>amazon-s3</code> エクステンションが <code>pom.xml</code> に追加されます。</p>
+</div>
+<div class="paragraph">
+<p>そして、 <code>multipart/form-data</code> リクエストをサポートするために、以下の依存関係を追加します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-resteasy-multipart&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="モデルのセットアップ"><a class="anchor" href="#モデルのセットアップ"></a>モデルのセットアップ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>この例では、ファイルのリストを管理するアプリケーションを作成します。この例のアプリケーションでは、エクステンションでサポートされている2つのプログラミングモデルをデモします。</p>
+</div>
+<div class="paragraph">
+<p>私たちのアプリケーションの主な目的はファイルをS3バケットにアップロードすることなので、 <code>multipart/form-data</code>
+ペイロードを定義するために使用するモデルを <code>MultipartBody</code> POJO の形で設定する必要があります。</p>
+</div>
+<div class="paragraph">
+<p>以下のように <code>org.acme.s3.FormData</code> クラスを作成します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.s3;
+
+import java.io.InputStream;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
+
+public class FormData {
+
+    @FormParam("file")
+    @PartType(MediaType.APPLICATION_OCTET_STREAM)
+    public InputStream data;
+
+    @FormParam("filename")
+    @PartType(MediaType.TEXT_PLAIN)
+    public String fileName;
+
+    @FormParam("mimetype")
+    @PartType(MediaType.TEXT_PLAIN)
+    public String mimeType;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>クラスは3つのフィールドを定義しています。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>data</code> that fill capture stream of uploaded bytes from the client</p>
+</li>
+<li>
+<p><code>fileName</code> that captures a filename as provided by the submited form</p>
+</li>
+<li>
+<p><code>mimeType</code> content type of the uploaded file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>第2ステップでは、以下のようにAmazon S3バケット内のファイルを表すBeanを作成してみましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.s3;
+
+import software.amazon.awssdk.services.s3.model.S3Object;
+
+public class FileObject {
+    private String objectKey;
+
+    private Long size;
+
+    public FileObject() {
+    }
+
+    public static FileObject from(S3Object s3Object) {
+        FileObject file = new FileObject();
+        if (s3Object != null) {
+            file.setObjectKey(s3Object.key());
+            file.setSize(s3Object.size());
+        }
+        return file;
+    }
+
+    public String getObjectKey() {
+        return objectKey;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public FileObject setObjectKey(String objectKey) {
+        this.objectKey = objectKey;
+        return this;
+    }
+
+    public FileObject setSize(Long size) {
+        this.size = size;
+        return this;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>派手なことは何もありません。注意すべき重要なことは、デフォルトのコンストラクタを持つことは、JSONシリアライゼーションレイヤーによって要求されるということです。static
+<code>from</code> メソッドは、バケット内のすべてのオブジェクトをリストアップする際に、S3 クライアントのレスポンスで提供される <code>S3Object</code>
+オブジェクトに基づいてBeanを作成します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-jax-rs-resource"><a class="anchor" href="#create-jax-rs-resource"></a>Create JAX-RS resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ここで、S3バケットからオブジェクトを取得したり、S3バケットにファイルを入れたりするためのS3リクエストを準備するためのメソッドからなる
+<code>org.acme.s3.CommonResource</code> を作成します。ここでは、S3バケットのリクエストメソッドの必要な名前として、設定プロパティー
+<code>bucket.name</code> が定義されていることに注意してください。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.s3;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Date;
+import java.util.UUID;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+abstract public class CommonResource {
+    private final static String TEMP_DIR = System.getProperty("java.io.tmpdir");
+
+    @ConfigProperty(name = "bucket.name")
+    String bucketName;
+
+    protected PutObjectRequest buildPutRequest(FormData formData) {
+        return PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(formData.fileName)
+                .contentType(formData.mimeType)
+                .build();
+    }
+
+    protected GetObjectRequest buildGetRequest(String objectKey) {
+        return GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+    }
+
+    protected File tempFilePath() {
+        return new File(TEMP_DIR, new StringBuilder().append("s3AsyncDownloadedTemp")
+                .append((new Date()).getTime()).append(UUID.randomUUID())
+                .append(".").append(".tmp").toString());
+    }
+
+    protected File uploadToTemp(InputStream data) {
+        File tempPath;
+        try {
+            tempPath = File.createTempFile("uploadS3Tmp", ".tmp");
+            Files.copy(data, tempPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return tempPath;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に、ファイルをアップロード/ダウンロードするためのAPIを提供する <code>org.acme.s3.S3SyncClientResource</code>
+を作成し、バケットのすべてのファイルを一覧表示します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.s3;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
+
+@Path("/s3")
+public class S3SyncClientResource extends CommonResource {
+    @Inject
+    S3Client s3;
+
+    @POST
+    @Path("upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFile(@MultipartForm FormData formData) throws Exception {
+
+        if (formData.fileName == null || formData.fileName.isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        if (formData.mimeType == null || formData.mimeType.isEmpty()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        PutObjectResponse putResponse = s3.putObject(buildPutRequest(formData),
+                RequestBody.fromFile(uploadToTemp(formData.data)));
+        if (putResponse != null) {
+            return Response.ok().status(Status.CREATED).build();
+        } else {
+            return Response.serverError().build();
+        }
+    }
+
+    @GET
+    @Path("download/{objectKey}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response downloadFile(@PathParam("objectKey") String objectKey) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GetObjectResponse object = s3.getObject(buildGetRequest(objectKey), ResponseTransformer.toOutputStream(baos));
+
+        ResponseBuilder response = Response.ok((StreamingOutput) output -&gt; baos.writeTo(output));
+        response.header("Content-Disposition", "attachment;filename=" + objectKey);
+        response.header("Content-Type", object.contentType());
+        return response.build();
+    }
+
+    @GET
+    public List&lt;FileObject&gt; listFiles() {
+        ListObjectsRequest listRequest = ListObjectsRequest.builder().bucket(bucketName).build();
+
+        //HEAD S3 objects to get metadata
+        return s3.listObjects(listRequest).contents().stream().sorted(Comparator.comparing(S3Object::lastModified).reversed())
+                .map(FileObject::from).collect(Collectors.toList());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-s3-clients"><a class="anchor" href="#configuring-s3-clients"></a>Configuring S3 clients</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S3クライアント(同期と非同期)は、 <code>src/main/resources</code> ディレクトリーで提供される
+<code>application.properties</code> ファイルを介して設定可能です。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+同期クライアントの適切な実装をクラスパスに追加する必要があります。デフォルトでは、エクステンションは URL Connection 接続 HTTP
+クライアントを使用するので、URL 接続クライアントの依存関係を <code>pom.xml</code> ファイルに追加してください。
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>代わりにApache HTTPクライアントを使用したい場合は、以下のように設定します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.s3.sync-client.type=apache</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そして、以下の依存関係をアプリケーションの <code>pom.xml</code> に追加します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>非同期クライアントについては、 link:#Going asynchronous[非同期にする] を参照してください。</p>
+</div>
+<div class="paragraph">
+<p>ローカルのS3インスタンスを使う場合は、以下のように設定します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.s3.endpoint-override=http://localhost:8008
+
+quarkus.s3.aws.region=us-east-1
+quarkus.s3.aws.credentials.type=static
+quarkus.s3.aws.credentials.static-provider.access-key-id=test-key
+quarkus.s3.aws.credentials.static-provider.secret-access-key=test-secret
+
+bucket.name=quarkus.s3.quickstart</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>quarkus.s3.aws.region</code> -
+クライアントが必要としていますが、ローカルのS3インスタンスを使用しているので、有効なAWSリージョンを選ぶことができます。</p>
+</li>
+<li>
+<p><code>quarkus.s3.aws.credentials.type</code> - <code>static</code> の資格情報プロバイダを <code>access-key-id</code> と
+<code>secret-access-key</code> の任意の値で設定します。</p>
+</li>
+<li>
+<p><code>quarkus.s3.endpoint-override</code> - Override the S3 client to use a local
+instance instead of an AWS service</p>
+</li>
+<li>
+<p><code>bucket.name</code> - Name of the S3 bucket</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>AWSアカウントで作業したい場合は、次のようにして設定する必要があります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">bucket.name=&lt;your-bucket-name&gt;
+
+quarkus.s3.aws.region=&lt;YOUR_REGION&gt;
+quarkus.s3.aws.credentials.type=default</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>bucket.name</code> - AWSアカウント上のS3バケット名</p>
+</li>
+<li>
+<p><code>quarkus.s3.aws.region</code> you should set it to the region where your S3 bucket
+was created,</p>
+</li>
+<li>
+<p><code>quarkus.s3.aws.credentials.type</code> - <code>default</code>
+クレデンシャル・プロバイダ・チェーンを使用して、この順番でクレデンシャルを検索します</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Java System Properties - <code>aws.accessKeyId</code> and <code>aws.secretAccessKey</code></p>
+</li>
+<li>
+<p>Environment Variables - <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code></p>
+</li>
+<li>
+<p>Credential profiles file at the default location (<code>~/.aws/credentials</code>)
+shared by all AWS SDKs and the AWS CLI</p>
+</li>
+<li>
+<p>Credentials delivered through the Amazon ECS if the
+<code>AWS_CONTAINER_CREDENTIALS_RELATIVE_URI</code> environment variable is set and the
+security manager has permission to access the variable,</p>
+</li>
+<li>
+<p>Instance profile credentials delivered through the Amazon EC2 metadata
+service</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="フロントエンドの作成"><a class="anchor" href="#フロントエンドの作成"></a>フロントエンドの作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ここで、 <code>S3SyncClientResource</code> .Quarkusと対話するための簡単なウェブページを追加してみましょう。Quarkusは、
+<code>META-INF/resources</code> ディレクトリーの下にある静的リソースを自動的に提供します。
+<code>src/main/resources/META-INF/resources</code> ディレクトリーに、この
+<a href="https://github.com/quarkusio/quarkus-quickstarts/blob/master/amazon-s3-quickstart/src/main/resources/META-INF/resources/s3.html">s3.html</a>
+ファイルの内容を含む <code>s3.html</code> ファイルを追加します。</p>
+</div>
+<div class="paragraph">
+<p>これで、REST サービスと対話できるようになりました。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>./mvnw compile quarkus:dev</code> で Quarkus を起動します。</p>
+</li>
+<li>
+<p>open a browser to <code><a href="http://localhost:8080/s3.html" class="bare">http://localhost:8080/s3.html</a></code></p>
+</li>
+<li>
+<p>upload new file to the current S3 bucket via the form and see the list of
+files in the bucket</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="次のステップ"><a class="anchor" href="#次のステップ"></a>次のステップ</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="パッケージング"><a class="anchor" href="#パッケージング"></a>パッケージング</h3>
+<div class="paragraph">
+<p>Packaging your application is as simple as <code>./mvnw clean package</code>.  It can
+be run with <code>java -jar
+target/amazon-s3-quickstart-1.0.0-SNAPSHOT-runner.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>GraalVMをインストールした状態で、ネイティブの実行バイナリーを作成することもできます: <code>./mvnw clean package
+-Dnative</code> お使いのシステムにもよりますが、時間がかかります。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="非同期にする"><a class="anchor" href="#非同期にする"></a>非同期にする</h3>
+<div class="paragraph">
+<p>Quarkusのエクステンションで使われているAWS SDK v2.xのおかげで、非同期プログラミングモデルをすぐに使えるようになりました。</p>
+</div>
+<div class="paragraph">
+<p><code>S3SyncClientResource</code> と同様の <code>org.acme.s3.S3AsyncClientResource</code>
+を作成しますが、非同期プログラミングモデルを使用します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.s3;
+
+import java.io.File;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import io.smallrye.mutiny.Uni;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
+import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
+
+@Path("/async-s3")
+public class S3AsyncClientResource extends CommonResource {
+    @Inject
+    S3AsyncClient s3;
+
+    @POST
+    @Path("upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Uni&lt;Response&gt; uploadFile(@MultipartForm FormData formData) throws Exception {
+
+        if (formData.fileName == null || formData.fileName.isEmpty()) {
+            return Uni.createFrom().item(Response.status(Status.BAD_REQUEST).build());
+        }
+
+        if (formData.mimeType == null || formData.mimeType.isEmpty()) {
+            return Uni.createFrom().item(Response.status(Status.BAD_REQUEST).build());
+        }
+
+        return Uni.createFrom()
+                .completionStage(() -&gt; {
+                    return s3.putObject(buildPutRequest(formData), AsyncRequestBody.fromFile(uploadToTemp(formData.data)));
+                })
+                .onItem().ignore().andSwitchTo(Uni.createFrom().item(Response.created(null).build()))
+                .onFailure().recoverWithItem(th -&gt; {
+                    th.printStackTrace();
+                    return Response.serverError().build();
+                });
+    }
+
+    @GET
+    @Path("download/{objectKey}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Uni&lt;Response&gt; downloadFile(@PathParam("objectKey") String objectKey) throws Exception {
+        File tempFile = tempFilePath();
+
+        return Uni.createFrom()
+                .completionStage(() -&gt; s3.getObject(buildGetRequest(objectKey), AsyncResponseTransformer.toFile(tempFile)))
+                .onItem()
+                .apply(object -&gt; Response.ok(tempFile)
+                        .header("Content-Disposition", "attachment;filename=" + objectKey)
+                        .header("Content-Type", object.contentType()).build());
+    }
+
+    @GET
+    public Uni&lt;List&lt;FileObject&gt;&gt; listFiles() {
+        ListObjectsRequest listRequest = ListObjectsRequest.builder()
+                .bucket(bucketName)
+                .build();
+
+        return Uni.createFrom().completionStage(() -&gt; s3.listObjects(listRequest))
+                .onItem().transform(result -&gt; toFileItems(result));
+    }
+
+    private List&lt;FileObject&gt; toFileItems(ListObjectsResponse objects) {
+        return objects.contents().stream()
+                .sorted(Comparator.comparing(S3Object::lastModified).reversed())
+                .map(FileObject::from).collect(Collectors.toList());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>非同期プログラミングにはRESTEasy Mutinyのサポートが必要です。依存関係を <code>pom.xml</code> に追加します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-resteasy-mutiny&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>あるいは、プロジェクトのベースディレクトリーでこのコマンドを実行することもできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension -Dextensions="resteasy-mutiny"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そして、 <code>pom.xml</code> に Netty HTTPクライアントの依存関係を追加します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="設定リファレンス"><a class="anchor" href="#設定リファレンス"></a>設定リファレンス</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <div class="content project-footer">
+  <div class="footer-section">
+    <div class="logo-wrapper">
+      <a href="/"><img src="/assets/images/quarkus_logo_horizontal_rgb_reverse.svg" class="project-logo" title="Quarkus"></a>
+    </div>
+  </div>
+  <div class="grid-wrapper">
+    <p class="grid__item width-3-12">Quarkus はオープンです。このプロジェクトの全ての依存関係は<a href='https://www.apache.org/licenses/LICENSE-2.0' target='_blank'>Apache Software License 2.0</a>または互換性のあるライセンスの元で利用出来ます。<br /><br />このウェブサイトは <a href='https://jekyllrb.com/' target='_blank'>Jekyll</a> で構築されており、<a href='https://pages.github.com/' target='_blank'>Github Pages</a>にホストされており、完全にオープンソースです。改善したい場合、 <a href='https://github.com/quarkusio/quarkusio.github.io' target='_blank'>ウェブサイトをフォークし</a>、修正してみせてください。</p>
+
+    
+      <div class="width-1-12 project-links">
+        <span>ナビゲーション</span>
+        <ul class="footer-links">
+          
+            <li><a href="/">ホーム</a></li>
+          
+            <li><a href="/guides">ガイド</a></li>
+          
+            <li><a href="/community/#contributing">貢献</a></li>
+          
+            <li><a href="/faq">FAQ</a></li>
+          
+            <li><a href="/get-started">はじめに</a></li>
+          
+        </ul>
+      </div>
+    
+      <div class="width-1-12 project-links">
+        <span>貢献</span>
+        <ul class="footer-links">
+          
+            <li><a href="https://twitter.com/quarkusio">フォロー</a></li>
+          
+            <li><a href="https://github.com/quarkusio">GitHub</a></li>
+          
+            <li><a href="/security">セキュリティポリシー</a></li>
+          
+        </ul>
+      </div>
+    
+      <div class="width-2-12 project-links">
+        <span>サポート</span>
+        <ul class="footer-links">
+          
+            <li><a href="https://stackoverflow.com/questions/tagged/quarkus">Stack Overflow</a></li>
+          
+            <li><a href="https://quarkusio.zulipchat.com">チャットルーム</a></li>
+          
+            <li><a href="https://groups.google.com/forum/#!forum/quarkus-dev">フォーラム</a></li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="width-4-12 more-links">
+        <span>Quarkusはコミュニティプロジェクトで構成されています：</span>
+        <ul class="footer-links">
+          
+            <li><a href="https://vertx.io/" target="_blank">Eclipse Vert.x</a></li>
+          
+            <li><a href="https://microprofile.io" target="_blank">Eclipse MicroProfile</a></li>
+          
+            <li><a href="https://hibernate.org" target="_blank">Hibernate</a></li>
+          
+            <li><a href="https://netty.io" target="_blank">Netty</a></li>
+          
+            <li><a href="https://resteasy.github.io" target="_blank">RESTEasy</a></li>
+          
+            <li><a href="https://camel.apache.org" target="_blank">Apache Camel</a></li>
+          
+            <li><a href="https://code.quarkus.io/" target="_blank">等々...</a></li>
+          
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="content redhat-footer">
+  <div class="grid-wrapper">
+    <span class="licence">
+      <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i> <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC by 3.0</a> | <a href="https://www.redhat.com/en/about/privacy-policy">Privacy Policy</a>
+    </span>
+    <span class="redhat">
+      Sponsored by
+    </span>
+    <span class="redhat-logo">
+      <a href="https://www.redhat.com/" target="_blank"><img src="/assets/images/redhat_reversed.svg"></a>
+    </span>
+  </div>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/assets/javascript/mobile-nav.js"></script>
+  <script type="text/javascript" src="/assets/javascript/scroll-down.js"></script>
+  <script src="/assets/javascript/satellite.js" type="text/javascript"></script>
+  <script src="/guides/javascript/config.js" type="text/javascript"></script>
+  <script src="/assets/javascript/search-filter.js" type="text/javascript"></script>
+  <script src="/assets/javascript/guides-version-dropdown.js" type="text/javascript"></script>
+  <script src="/assets/javascript/back-to-top.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+    <channel>
+        <title>Quarkus</title>
+        <link>https://quarkus.io</link>
+        <description>Quarkus: Supersonic Subatomic Java</description>
+        <lastBuildDate>Fri, 12 Mar 2021 00:48:48 +0000</lastBuildDate>
+        
+        <item>
+            <title>Quarkus 1.12.2.Final released - Bugfixes</title>
+            <link>
+                https://quarkus.io/blog/quarkus-1-12-2-final-released/
+            </link>
+            <description>
+                1.12.2.Final is a maintenance release fixing bugs and improving the documentation. It is a recommended upgrade for everyone using Quarkus 1.12. まだ1.12を使用していない場合は、 1.12移行ガイドを参照してください。 変更点 Two important regressions fixed 1.12.2.Final fixes two important regressions that were introduced in 1.12.1.Final: Building native images on Windows was broken. We added a CI check...
+            </description>
+            <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-1-12-2-final-released/
+            </guid>
+        </item>
+        
+        <item>
+            <title>ja.quarkus.io が公開されました</title>
+            <link>
+                https://quarkus.io/blog/ja-quarkus-io/
+            </link>
+            <description>
+                
+本日、quarkus.io日本語版サイト (https://ja.quarkus.io)
+が公開されましたことをお知らせします。ここでは、Quarkusの価値あるガイドや、ブログエントリの翻訳が公開されます。
+
+
+
+
+
+
+
+一部のコンテンツはまだ翻訳されていませんが、1つずつ翻訳を続けています。GitHubのパブリックレポジトリ
+(https://github.com/quarkusio/ja.quarkus.io)
+でコンテンツのローカリゼーションに取り組んでおり、翻訳のPull-Requestは大歓迎です。quarkus.ioのローカライズに興味がある場合は、ぜひご参加ください。ローカリゼーションプロジェクトへの貢献方法の詳細については、
+翻訳ガイド(ja)
+を参照してください。
+
+
+https://ja.quarkus.io が日本のユーザーコミュニティに大いに役立つことを願っています。
+
+            </description>
+            <pubDate>Wed, 10 Mar 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/ja-quarkus-io/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkusでのパス解決</title>
+            <link>
+                https://quarkus.io/blog/path-resolution-in-quarkus/
+            </link>
+            <description>
+                ここ数週間、私たちは通常になく揺れ動いていました。パスの解決はこっそりと複雑になることがあり、物事を良くしようとしているうちに、私たちは誤って悪化させてしまったのです!今はすべて修正しましたが、いくつかの変更点があることに気づくかもしれません。うまくいけば、この記事でその変更が何であるか、その意味、そしてあなたが望むようにすべてを元の状態に戻すために何ができるか明確になるでしょう。 TL;DR: 1.11.5.Final と 1.12.1.Final の時点では、設定における先頭のスラッシュは重要です。つまり、 /endpoint を使用した場合、そのエンドポイントは絶対ルートから提供されます。もし、包含するバケットからの相対的なものにしたいのであれば、先頭のスラッシュを省略してください。例えば、 quarkus.http.non-application-root-path はデフォルトでは q になり、 quarkus.http.root-path の下に入れ子になり、元の動作と一致します。アプリケーション以外のエンドポイントを絶対ルートから (設定されている場合は http ルートの兄弟として) 提供するために、例えば /q のような絶対パスを使うことができます。アプリケーション以外のエンドポイントの動作を完全に削除するには、 quarkus.http.non-application-root-path を quarkus.http.root-path と同じ値に設定します。これを行う最も簡単な方法は、変数を使用することです: quarkus.http.non-application-root-path=${quarkus.http.root-path}. 長文での説明 昔々、Quarkusでは、ヘルスチェックやメトリクスなどのエンドポイントを追加で定義していました。これらは、アプリケーションが定義したエンドポイントと一緒に quarkus.http.root-path から提供されていました。デフォルトでは quarkus.http.root-path は / であり、事実上見えないようになっているため、これは必ずしも明らかではありません。 そして、 アプリケーションエンドポイントとの衝突を避け、セキュリティやアクセスポリシーの処理を容易にするために、アプリケーション以外のエンドポイントをどのようにグループ化するかを考え始めました。さらに何人かのユーザからは、これらの非アプリケーションエンドポイントを 完全に別のポートから提供できないかという意見もありました (まだ実現していません)。 最初のステップは、これらのエクステンションで定義されたエンドポイントをすべて一緒にグループ化することでした。これが、 非アプリケーションエンドポイントパスの始まりでした。この新しいパスのデフォルトの場所は /q で、他のエンドポイントと同様に HTTP ルートパスの下に入れ子になっていました。この効果は、例えば /health を /q/health に移動させることでした。 私たちは、メトリクスやヘルスなどのエンドポイントの一部を移動することは、すでに展開されているアプリケーションや人間の記憶にとって問題があることを知っていました。移行を容易にするために、これらのエンドポイントの一部にリダイレクトを追加し、 /metrics にアクセスした場合は...
+            </description>
+            <pubDate>Thu, 04 Mar 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/path-resolution-in-quarkus/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus 1.12.1.1.Finalリリース - バグフィックス</title>
+            <link>
+                https://quarkus.io/blog/quarkus-1-12-1-final-released/
+            </link>
+            <description>
+                
+1.12.1.Finalは、バグの修正とドキュメントの改善を行うメンテナンスリリースです。
+
+
+1.12.1.Finalは、Quarkus 1.12を使用しているすべての人にとって安全なアップグレードです。
+
+
+まだ1.12を使用していない場合は、
+1.12移行ガイドを参照してください。
+
+
+変更点
+
+
+完全な変更履歴
+
+GitHubで1.12.1.1.Finalの完全な変更履歴を入手できます。
+
+
+
+
+
+参加のお誘い
+
+
+私達は皆様からのフィードバックに重きを置いています。バグ報告、改善要望を是非お願いします。一緒に素晴らしいものを作り上げていきましょう!
+
+
+Quarkusユーザーの場合でも、単に興味を持っているだけの場合でも、恥ずかしがらずにコミュニティに参加して下さい!:
+
+
+
+
+GitHub でフィードバック
+
+
+コードを作成し、 プルリクエスト を送信
+
+
+Zulip や
+メーリングリスト でディスカッションに参加
+
+
+Stack Overflow で質問
+
+
+
+
+
+            </description>
+            <pubDate>Wed, 03 Mar 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-1-12-1-final-released/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus 1.12リリース - Fast jar のデフォルト化、RESTEasy ReactiveのMultipartサポート</title>
+            <link>
+                https://quarkus.io/blog/quarkus-1-12-0-final-released/
+            </link>
+            <description>
+                Quarkus 1.12.0.Finalのリリースを発表できることを嬉しく思います。 それはいくつかの重要な変更を含みます: Fast jar は、jar をビルドする際のデフォルトのパッケージングになりました。 RESTEasy Reactiveは改善を続け、multipartをサポートするようになりました。 Vert.x AxleとRX Javaのマネージドインスタンスを削除しました。 GraalVM 21.0にアップグレードしました。 移行ガイド 既存のアプリケーションの移行をお考えですか？ここに 1.12の移行ガイドがあります。 変更点 Fast jarのデフォルト化 Quarkusでは、常にいくつかのタイプのjarパッケージを提供してきました。歴史的には、標準のjarパッケージ（ -runner.jar と lib/ ディレクトリのあるもの）か、uber jarがありました。Quarkus 1.5では、Fast jarと呼ばれる新しいパッケージタイプを導入しました。その主な目的は、ブート時間の更なる改善でした。 Quarkusの時間軸では、1.5は100年前のことを意味し、Fast jarはもうゴールデンアワーの準備ができており、変更を正当化するのに十分な改善をもたらしていると考えています。そのため、1.12からデフォルトにすることを決定しました。 この変更は、生成された成果物が quarkus-app ディレクトリの下に置かれるようになったため、ワークフローに影響を及ぼします。 アプリケーションを以下で起動するのではなく、 java -jar target/my-application-runner-1.0.0-SNAPSHOT.jar これからは以下で起動します: java -jar target/quarkus-app/quarkus-run.jar アプリケーションをデプロイする際には、 quarkus-app ディレクトリ全体をデプロイする必要があります。 また、Dockerfilesもこれを考慮して調整する必要があります。 詳細は 移行ガイド をご覧ください。 ワークフローを変更するタイミングではない場合は、 `application.properties`に以下のプロパティを追加することで、簡単に以前のパッケージングに戻ることができます。...
+            </description>
+            <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-1-12-0-final-released/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus Tools for IntelliJ 1.4.0 がリリースされました!</title>
+            <link>
+                https://quarkus.io/blog/intellij-quarkus-tools-1.4.0/
+            </link>
+            <description>
+                
+Quarkus Tools for
+IntelliJの1.4.0リリースを発表できることを大変嬉しく思います。このリリースでは、Quarkusプロジェクトウィザードのcodestartsのサポートが強化されました。
+
+
+Codestarts
+
+
+Quarkusプロジェクトウィザードでは、code.quarkus.ioと同様に、codestartsを有効にしたエクステンションを特定のアイコン（エクステンション名の右側）で強調表示するようになり、ユーザーはcodestartsを有効にしたエクステンションをよりよく識別できるようになりました。
+
+
+
+
+
+
+
+
+
+将来
+
+
+ご質問、ご意見、ご感想などがありましたら、ぜひ
+Issueを開いてください。
+
+
+お読みいただきありがとうございました。次のリリースをお待ちください!
+
+
+
+
+リンク
+
+
+
+
+GitHub リポジトリ: https://github.com/redhat-developer/intellij-quarkus
+
+
+Issueを開く: https://github.com/redhat-developer/intellij-quarkus/issues
+
+
+
+
+
+            </description>
+            <pubDate>Wed, 17 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/intellij-quarkus-tools-1.4.0/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus 1.11.3.Final released - Bugfixes</title>
+            <link>
+                https://quarkus.io/blog/quarkus-1-11-3-final-released/
+            </link>
+            <description>
+                
+1.11.3.Finalは主に1.11.2.Finalで導入された、RESTEasy と OpenTracing
+の両方のエクステンションを使用している場合にネイティブの実行ファイルをビルドできないようにするリグレッションを修正しています。
+
+
+これは、Quarkus 1.11を使用しているすべての人にとって安全なアップグレードです。
+
+
+まだ1.11を使用していない場合は、
+1.11移行ガイド
+を参照してください。
+
+
+GitHubで1.11.3.Finalの完全な変更履歴を入手できます。
+
+
+参加のお誘い
+
+
+私達は皆様からのフィードバックに重きを置いています。バグ報告、改善要望を是非お願いします。一緒に素晴らしいものを作り上げていきましょう!
+
+
+Quarkusユーザーの場合でも、単に興味を持っているだけの場合でも、恥ずかしがらずにコミュニティに参加して下さい!:
+
+
+
+
+GitHub でフィードバック
+
+
+コードを作成し、 プルリクエスト を送信
+
+
+Zulip や
+メーリングリスト でディスカッションに参加
+
+
+Stack Overflow で質問
+
+
+
+
+
+            </description>
+            <pubDate>Thu, 11 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-1-11-3-final-released/
+            </guid>
+        </item>
+        
+        <item>
+            <title>安定性を犠牲にしないパフォーマンス向上</title>
+            <link>
+                https://quarkus.io/blog/resteasy-reactive-faq/
+            </link>
+            <description>
+                このブログ記事の目的は、RESTEasy Reactive についての混乱を解消し、よくある質問に答えることです。 謝辞 This blog post would not have been possible without the expert advice of Clement Escoffier and Stéphane Épardaud. 命令型とリアクティブ型: エレベーターピッチ RESTEasy Reactive が重要な理由と、RESTEasy Classic と異なる点を理解するために、ここ で最初に紹介した非常に重要なメッセージを再び考察してみましょう。 一般的に、Java のWeb アプリケーションでは、ブロッキング IO 操作と組み合わせた命令型プログラミングを使用します。これは、コードを推論するのが簡単なので、非常に人気があります。物事は順次実行されます。アプリケーションがリクエストを受け取ると、フレームワークはこのリクエストをワーカースレッドに関連付けます。リクエスト処理がデータベースや他のリモートサービスと対話する必要があるときは、ブロッキング IO に依存します。スレッドは応答を待ってブロックされ、通信を同期化します。このモデルでは、1 つのリクエストは別のスレッドで実行されるので、別のリクエストの影響を受けません。1 つのスレッドが待機している場合でも、異なるスレッド上で実行されている他のリクエストが大幅に遅くなることはありません。 しかし、このモデルでは、同時実行リクエストごとに1つのスレッドが必要となり、達成可能な同時実行性に制限が生じます。一方、リアクティブ実行モデルでは、非同期開発モデルとノンブロッキング IO を採用しています。このモデルでは、複数のリクエストを同じスレッドで処理することができます。(リモートサービスをリクエストしたり、データベースと対話したりするために) リクエストの処理が進まなくなった場合は、ノンブロッキング IO を使用します。スレッドをブロックする代わりに、操作をスケジュールし、操作の完了後に呼び出される継続を渡します [1]。これによりスレッドはすぐに解放され、別のリクエストに対応するために使用することができます。IO 操作の結果が利用可能になると、リクエストの処理が再開され、その実行が継続されます。 このモデルでは、単一の IO スレッドを使用して複数のリクエストを処理することができます。3...
+            </description>
+            <pubDate>Wed, 10 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/resteasy-reactive-faq/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus 1.11.2.Final リリース - バグ修正</title>
+            <link>
+                https://quarkus.io/blog/quarkus-1-11-2-final-released/
+            </link>
+            <description>
+                
+1.11.2.Final は、バグの修正とドキュメントの改善を行うメンテナンスリリースです。
+
+
+これは、Quarkus 1.11 を使用しているすべての人にとって安全なアップグレードです。
+
+
+まだ 1.11 を使用していない場合は、
+1.11移行ガイド
+を参照してください。
+
+
+変更点
+
+
+Hibernate ORM
+
+Hibernate ORM 5.4.27.SP1 にアップグレードし、データ損失を引き起こす可能性のある重要な問題が修正されました。
+
+
+したがって、アップグレードを強くお勧めします。
+
+
+
+完全な変更履歴
+
+GitHub
+上で 1.11.2.Final の完全な変更履歴 を入手できます。
+
+
+
+
+
+参加のお誘い
+
+
+皆様からのフィードバックは非常に重要です。バグ報告、改善要望をぜひお願いします。一緒に素晴らしいものを作り上げていきましょう!
+
+
+Quarkus ユーザーの場合でも、単に興味を持っているだけの場合でも、気軽にコミュニティに参加してください。
+
+
+
+
+GitHub でフィードバックの送信
+
+
+コードを作成し、 プルリクエスト を送信
+
+
+Zulip や
+メーリングリスト でディスカッションに参加
+
+
+Stack Overflow で質問
+
+
+
+
+
+            </description>
+            <pubDate>Tue, 09 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-1-11-2-final-released/
+            </guid>
+        </item>
+        
+        <item>
+            <title>Quarkus Insights Q&amp;A</title>
+            <link>
+                https://quarkus.io/blog/quarkus-insights-qanda/
+            </link>
+            <description>
+                
+次のQuarkus Insightsのエピソードでは、新しいことを試しています。
+
+
+私たちは、私たちが見てきた最も頻繁に質問された質問や、私たちの様々なソーシャルメディアで #quarkusinsights
+とタグ付けされた任意の質問をカバーします(
+Twitter 、
+Facebook 、
+LinkedIn
+、または youtubeイベント で直接)。
+
+
+答えてほしいQuarkusに関する質問がある場合は、以下のいずれかのサイトでお知らせください。
+
+
+月曜日にお会いましょう!
+
+            </description>
+            <pubDate>Tue, 02 Feb 2021 00:00:00 +0000</pubDate>
+            <guid>
+                https://quarkus.io/blog/quarkus-insights-qanda/
+            </guid>
+        </item>
+        
+    </channel>
+</rss>
